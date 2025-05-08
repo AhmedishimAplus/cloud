@@ -112,7 +112,7 @@ Using both visibility timeout and DLQ ensures system resilience:
 ###📷 Screenshots
 ![Table](./Table.png)
 ![sns subscription](./snssubscription.png)
-![dead messages](./dead messages.png)
+![dead messages](./deadmessages.png)
 ![queues](./queues.png)
 ![logs](./logs.png)
 
