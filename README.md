@@ -2,7 +2,7 @@
 
 This serverless system uses AWS to handle order events, store them in a database, and process them via messaging services. It's designed using SNS, SQS, Lambda, and DynamoDB.
 
-# Ahmed TAmer tut16 10004773
+# Ahmed Tamer tut16 10004773
 
 ---
 
