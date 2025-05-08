@@ -39,6 +39,16 @@ This serverless system uses AWS to handle order events, store them in a database
 - Runtime: **Node.js**
 - IAM: Allow access to DynamoDB + SQS
 - Trigger: `OrderQueue`
+###Dummy test:
+CopyEdit 
+{ 
+"orderId": "O1234", 
+"userId": "U123", 
+"itemName": "Laptop", 
+"quantity": 1, 
+"status": "new", 
+"timestamp": "2025-05-03T12:00:00Z"
+}
 - Code:
 ```ts
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"; 
@@ -71,3 +81,38 @@ export const handler = async (event) => {
         } 
     } 
 };
+
+```
+## 🧠 Visibility Timeout & DLQ Explanation
+
+### ✅ Visibility Timeout
+
+Visibility timeout in Amazon SQS ensures that once a message is received by a consumer (e.g., Lambda), it becomes temporarily invisible to prevent duplicate processing.
+
+- In this system, when the Lambda function reads a message from `OrderQueue`, the message becomes hidden for the duration of the timeout.
+- If the Lambda function fails (e.g., due to parsing errors), the message becomes visible again after the timeout period, allowing it to be retried.
+- This guarantees **at-least-once delivery** and protects against **race conditions** or duplicate handling.
+
+### ✅ Dead-Letter Queue (DLQ)
+
+A Dead-Letter Queue is used to capture and isolate messages that consistently fail.
+
+- `OrderDLQ` is configured as the DLQ for `OrderQueue` with `maxReceiveCount = 3`.
+- If the same message fails to be processed 3 times, it is moved to `OrderDLQ`.
+- This prevents the system from getting stuck retrying bad messages indefinitely.
+- Messages in the DLQ can be inspected manually, allowing developers to analyze failures and reprocess valid ones later.
+
+### 🔒 Benefit
+
+Using both visibility timeout and DLQ ensures system resilience:
+- Prevents message loss
+- Ensures graceful failure handling
+- Supports easier debugging and recovery
+
+###📷 Screenshots
+![Table](./Table.png)
+![sns subscription](./sns subscription.png)
+![dead messages](./dead messages.png)
+![queues](./queues.png)
+![logs](./logs.png)
+
