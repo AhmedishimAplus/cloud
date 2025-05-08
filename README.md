@@ -13,7 +13,7 @@ This serverless system uses AWS to handle order events, store them in a database
 - **DynamoDB**: Stores order info.
 - **DLQ**: Captures messages that fail >3 times.
 
-![Architecture Diagram](./architecture_diagram.png)
+![Architecture Diagram](./architecture_diagram2.png)
 
 ---
 
